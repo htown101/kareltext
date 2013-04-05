@@ -7,10 +7,10 @@ import java.util.*;
  * @author Heather,Noel,Sam,Amber,Josh,MacsR4Luzrs
  */
 
-public class World
+public class World 
 {
-    //gems remaining could probably be replaced with
-    //a call to see if the gems arrayList is empty
+    //gems remaining could probably be replaced with 
+    //a call to see if the gems arrayList is empty 
     
     private int gemsRemaining = 1; //gems left in world
     private ArrayList walls = new ArrayList();//walls in world
@@ -21,7 +21,7 @@ public class World
     Player player;
     
     //Map
-    public String level =
+    public static String level =
               "####################\n"
             + "#        $         #\n"
             + "#       $#$        #\n"
@@ -52,13 +52,14 @@ public class World
         for (int i = 0; i < level.length(); i++)
         {
             //Grab the item in string at i
-            char item = level.charAt(i);
-            
+            char item = level.charAt(i); 
+
             //Adjust X,Y value based on what character is at i
             //and create an item in the array list if needed
             if (item == '\n')
             {
                 y += 1;
+                x = 0;
             }
             else if (item == '#')
             {
@@ -85,9 +86,67 @@ public class World
     }
     
     //updates the map with karels new position
-    public void update_map(int new_x, int new_y, char symbol)
+    public static void updateMap(int new_x, int new_y, char symbol) 
     {
+
+        System.out.println("starting to update map");
+        int num_rows = 10; // The number of rows
+        int num_cols = 20; // The number of columns. Does not include the \n
+        int num_symbols = 4; // The number of symbols for Karel
+        int old_x = -1;
+        int old_y = -1;
+        char[] karel_symbols = {'^', '<', '>', 'v'}; // Karels symbols
         
+        /* Converting from level string to temporary string array */
+        String[] convert_map = new String [num_rows];
+        for (int i= 0; i < num_rows; i++)
+        {
+            int x = (i * (num_cols + 1));
+            convert_map[i] = level.substring(x, (x + num_cols));
+        }
+    
+        /* Finding the last place Karel was and removing it */
+        for (int i = 0; i < num_rows; i++)
+        {
+            for (int h = 0; h < num_symbols; h++)
+            {
+                /* Iterating through all of the possible Karel symbols
+* and checking each string for their position. */
+                int checker = convert_map[i].indexOf(karel_symbols[h]);
+                if (checker != -1)
+                {
+                    old_y = i;
+                    old_x = checker;
+                    break;
+                }
+            }
+        }
+        
+        /* Converting from temp string array to 2d character array*/
+        char[][] current_map = new char [num_rows] [num_cols];
+        for (int i = 0; i < num_rows; i++)
+        {
+            current_map[i] = convert_map[i].toCharArray();
+        }
+        if ((old_x != -1) && (old_y != -1))
+        { // Making sure old_x and old_y were found
+          current_map[old_y][old_x] = ' '; // Replacing Karel's old position
+        }
+        current_map[new_y][new_x] = symbol; // Putting Karel in his new position
+
+        /* Overwriting level with updated map */
+        String temp_level = new String();
+        for (int i = 0; i < num_rows; i++)
+        {
+            for (int h = 0; h < num_cols; h++)
+            {
+                temp_level += current_map[i][h];
+            }
+            temp_level += '\n';
+        }
+
+        level = temp_level;
+        System.out.println(level);
     }
     
     final class mController
@@ -139,10 +198,10 @@ public class World
                 switch(direction)
                 {
                     case '^':
-                        player.move(0, 1);
+                        player.move(0, -1);
                         break;
                     case 'v':
-                        player.move(0, -1);
+                        player.move(0, 1);
                         break;
                     case '>':
                         player.move(1,0);
@@ -196,7 +255,12 @@ public class World
             }
             
             //update the map with new position or direction icon
-            //updateWorld(player.GetX(),player.GetY(),direction);
+            System.out.println("X: ");
+            System.out.println(player.GetX());
+            System.out.println("Y: ");
+            System.out.println(player.GetY());
+            
+            updateMap(player.GetX(),player.GetY(),player.GetDirection());
         }
     }
 }
