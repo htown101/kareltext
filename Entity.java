@@ -2,11 +2,15 @@ package textbased;
 
 //Primary class for all objects 
 //that will appear in world
+
+import java.util.*;
+
 public class Entity 
 {
     //object coordinates
-    private int x;
-    private int y; 
+    //change x back to private and update collision
+    public int x;
+    public int y;
     
     //constructor sets object position
     public Entity(int x, int y)
@@ -39,9 +43,19 @@ public class Entity
     }
     
     //Handles all collisions that are not game ending
-    public boolean isNormalCollision(Entity entity)
+    public boolean isWallCollision(int x, int y, ArrayList walls)
     {
-       //No collision
+        Wall tempWall;
+        
+       for (int i = 0; i < walls.size(); i++)
+       {
+           tempWall = (Wall) walls.get(i);
+           
+            if(tempWall.x == x && tempWall.y == y)
+            {
+                return true;
+            }
+       }
        return false;
     }
     
