@@ -1,11 +1,13 @@
 package textbased;
 
 //Player class used to control karel the robot
+
+import java.util.ArrayList;
+
 public class Player extends Entity
 {
     
-    char direction; //karels direction icon
-
+    char direction; //karels icon ^ > < v
     private int previousX = 0;  //These 2 variables 
     private int previousY = 0;  //are currently unused
     
@@ -19,8 +21,17 @@ public class Player extends Entity
     //updates karels position
     public void move(int x, int y) 
     {
-        int newX = this.GetX() + GetX();
-        int newY = this.GetY() + GetY();
+        int newX = this.GetX() + x;
+        int newY = this.GetY() + y;
+        this.SetX(newX);
+        this.SetY(newY);
+    }
+    
+    //moves karel to previous position to avoid collision
+    public void moveBack(int x, int y) 
+    {
+        int newX = this.GetX() + x;
+        int newY = this.GetY() + y;
         this.SetX(newX);
         this.SetY(newY);
     }
@@ -34,4 +45,6 @@ public class Player extends Entity
     {
         this.direction = newDirection;
     }
+    
+   
 }
