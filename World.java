@@ -44,6 +44,7 @@ public class World
     {
         //create a wall object
         Wall wall;
+        Gem gem;
         
         //variables used to keep track of coordinates during loop
         int x = 0;
@@ -72,6 +73,12 @@ public class World
                 player = new Player(x,y);
                 x += 1;
             }
+            else if (item == '$')
+            {
+                gem = new Gem(x,y);
+                gems.add(gem);
+                x += 1;
+            }
             else if (item == ' ')
             {
                 x += 1;
@@ -88,8 +95,6 @@ public class World
     //updates the map with karels new position
     public static void updateMap(int new_x, int new_y, char symbol) 
     {
-
-        System.out.println("starting to update map");
         int num_rows = 10; // The number of rows
         int num_cols = 20; // The number of columns. Does not include the \n
         int num_symbols = 4; // The number of symbols for Karel
@@ -146,7 +151,6 @@ public class World
         }
 
         level = temp_level;
-        System.out.println(level);
     }
     
     final class mController
@@ -161,6 +165,10 @@ public class World
                 
                 //Print the updated map
                 System.out.println(level);
+                if (player.isWallCollision(player.GetX(), player.GetY(), walls))
+                {
+                    System.out.println("you hit a wall");
+                }
                 
                 //Game ending conditions
                 //check_if_game_finished();
@@ -199,17 +207,34 @@ public class World
                 {
                     case '^':
                         player.move(0, -1);
+                        if (player.isWallCollision(player.GetX(), player.GetY(), walls))
+                        {
+                            player.moveBack(0, 1);
+                        }
                         break;
                     case 'v':
                         player.move(0, 1);
+                        if (player.isWallCollision(player.GetX(), player.GetY(), walls))
+                        {
+                            player.moveBack(0, -1);
+                        }
                         break;
                     case '>':
                         player.move(1,0);
+                        if (player.isWallCollision(player.GetX(), player.GetY(), walls))
+                        {
+                            player.moveBack(-1, 0);
+                        }
                         break;
                     case '<':
                         player.move(-1,0);
+                        if (player.isWallCollision(player.GetX(), player.GetY(), walls))
+                        {
+                            player.moveBack(0, -1);
+                        }
                         break;
                 }
+                
             }
             //Turn the player left
             else if (choice == 2)
@@ -255,11 +280,6 @@ public class World
             }
             
             //update the map with new position or direction icon
-            System.out.println("X: ");
-            System.out.println(player.GetX());
-            System.out.println("Y: ");
-            System.out.println(player.GetY());
-            
             updateMap(player.GetX(),player.GetY(),player.GetDirection());
         }
     }
