@@ -1,15 +1,10 @@
 package textbased;
 
 //Player class used to control karel the robot
-
-import java.util.ArrayList;
-
 public class Player extends Entity
 {
     
     char direction; //karels icon ^ > < v
-    private int previousX = 0;  //These 2 variables 
-    private int previousY = 0;  //are currently unused
     
     //Constructor - set Karel north
     public Player(int x,int y)
